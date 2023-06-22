@@ -1,0 +1,9 @@
+flask 
+flask_session
+nba_api
+pandas
+numpy 
+statsmodels
+gunicorn
+scikit-learn
+tpot

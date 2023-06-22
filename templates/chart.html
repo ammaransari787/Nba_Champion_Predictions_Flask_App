@@ -1,0 +1,53 @@
+{% extends 'new_layout.html' %}
+
+{% block title %}
+    {{ name }}
+{% endblock %}
+
+{% block main %}
+<div class="table-responsive"> 
+    <canvas id="canvas" style="height:40em" class="table"></canvas>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <script>
+
+    function decodeHtml(html) {
+        var txt = document.createElement("textarea");
+        txt.innerHTML = html;
+        return txt.value;
+    }
+
+    jason_data = decodeHtml("{{ json_file }}");
+
+    let json_data = jason_data.replace(/'/g, '"');
+
+    json_data_object = JSON.parse(json_data);
+
+    // console.log(json_data_object);
+    
+    const ctx = document.getElementById('canvas');
+  
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: Object.keys(json_data_object),
+        datasets: [{
+          label: `Probability Of Winning 2023 NBA Championship By Team According To ${"{{ name }}"}`,
+          data: Object.values(json_data_object),
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: false,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  </script>
+{% endblock %}
