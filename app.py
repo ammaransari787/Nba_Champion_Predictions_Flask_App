@@ -259,23 +259,23 @@ def bayesian_regression():
     if request.method == "POST":
         return apology('apologies', 403)
     else:
+        if should_we_query_API():
+            pull_data()
+
+        X_sk = pull_from_json('X_sk.json')
+        y_sk = pull_from_json("y_sk_tpot.json", "Series")
+        current_year_test_data = pull_from_json("current_year_test_data.json")
+
+        # log transforming playoff wins, then scaling so max is 1
+        y_sk = np.log(y_sk + 1) / np.log(16 + 1) 
+
         """
-        Because pystan and its c++ compiler cause free-tier fly.io 
-        hosting server to run out of memory and crash,
-        commented out below code, 
-        and just displaying image made using 
-        the data the code below generates.
+        Commented out pystan code after caching posterior samples,
+        because c++ compiler causes fly.io server to consume 
+        too much memory and crash, both with pystan and cmdstanpy
         """
 
-        # if should_we_query_API():
-        #     pull_data()
-
-        # X_sk = pull_from_json('X_sk.json')
-        # y_sk = pull_from_json("y_sk_tpot.json", "Series")
-        # current_year_test_data = pull_from_json("current_year_test_data.json")
-
-        # # log transforming playoff wins, then scaling so max is 1
-        # y_sk = np.log(y_sk + 1) / np.log(16 + 1) 
+        # Commented out pystan code: 
 
         # z_score_PLAYOFF_WINS_list = []
         # z_score_FT_PCT_list = []
@@ -336,66 +336,70 @@ def bayesian_regression():
         # df = fit.to_frame()
         # # print(df.describe().T)
 
-        # def sim_(post, test_data):
-        #     predictions_ = pandas.DataFrame()
-        #     for j in range(len(test_data)):
-        #         this_column_ = []
-        #         for i in range(len(post)):
-        #             this_column_.append(np.random.normal(loc=post['a'][i] + post['bFT'][i]*test_data['FT_PCT'][j] + post['bMVP'][i]*test_data['NUM_MVP_PLAYERS'][j] + post['bWP'][i] * test_data['W_PCT'][j] + post["bER"][i]*test_data["E_REB_PCT"][j], scale=post['sigma'][i], size = 1)[0])
-        #         predictions_[f"{test_data.index[j]}"] = this_column_
+        # df.to_csv('cached_posterior_samples.csv')
 
-        #     return predictions_
+        df = pandas.read_csv("cached_posterior_samples.csv")
+
+        def sim_(post, test_data):
+            predictions_ = pandas.DataFrame()
+            for j in range(len(test_data)):
+                this_column_ = []
+                for i in range(len(post)):
+                    this_column_.append(np.random.normal(loc=post['a'][i] + post['bFT'][i]*test_data['FT_PCT'][j] + post['bMVP'][i]*test_data['NUM_MVP_PLAYERS'][j] + post['bWP'][i] * test_data['W_PCT'][j] + post["bER"][i]*test_data["E_REB_PCT"][j], scale=post['sigma'][i], size = 1)[0])
+                predictions_[f"{test_data.index[j]}"] = this_column_
+
+            return predictions_
         
-        # sim_playoff_wins = sim_(df, current_year_test_data)
+        sim_playoff_wins = sim_(df, current_year_test_data)
 
-        # sim_mean = pandas.DataFrame()
+        sim_mean = pandas.DataFrame()
         
-        # sim_mean_list_ = []
-        # sim_name_list = []
+        sim_mean_list_ = []
+        sim_name_list = []
 
-        # sim_one_point_five_list_ = []
-        # sim_ninety_eight_point_five_list_ = []
+        sim_one_point_five_list_ = []
+        sim_ninety_eight_point_five_list_ = []
 
-        # for i in range(len(sim_playoff_wins.axes[1])):
-        #     sim_name_list.append(sim_playoff_wins.axes[1][i])
-        #     mean_mu = np.mean(sim_playoff_wins[f"{sim_playoff_wins.axes[1][i]}"])
-        #     transformed_mean_mu = (np.exp(mean_mu * np.log(17))) - 1
-        #     sim_mean_list_.append(transformed_mean_mu)
-        #     # sim_mean_list_.append(mean_mu)
+        for i in range(len(sim_playoff_wins.axes[1])):
+            sim_name_list.append(sim_playoff_wins.axes[1][i])
+            mean_mu = np.mean(sim_playoff_wins[f"{sim_playoff_wins.axes[1][i]}"])
+            transformed_mean_mu = (np.exp(mean_mu * np.log(17))) - 1
+            sim_mean_list_.append(transformed_mean_mu)
+            # sim_mean_list_.append(mean_mu)
 
-        #     # untransformed_one_point_five = np.percentile(sim_playoff_wins[f"{sim_playoff_wins.axes[1][i]}"], 1.5) # 97% credible interval 
-        #     untransformed_one_point_five = np.percentile(sim_playoff_wins[f"{sim_playoff_wins.axes[1][i]}"], 0.5) # 99% credible interval 
+            # untransformed_one_point_five = np.percentile(sim_playoff_wins[f"{sim_playoff_wins.axes[1][i]}"], 1.5) # 97% credible interval 
+            untransformed_one_point_five = np.percentile(sim_playoff_wins[f"{sim_playoff_wins.axes[1][i]}"], 0.5) # 99% credible interval 
 
-        #     sim_one_point_five_list_.append(np.exp(untransformed_one_point_five * np.log(17)) - 1)
+            sim_one_point_five_list_.append(np.exp(untransformed_one_point_five * np.log(17)) - 1)
 
-        #     # untransformed_ninety_eight_point_five = np.percentile(sim_playoff_wins[f"{sim_playoff_wins.axes[1][i]}"], 98.5) # 97% credible interval 
-        #     untransformed_ninety_eight_point_five = np.percentile(sim_playoff_wins[f"{sim_playoff_wins.axes[1][i]}"], 99.5) # 99% credible interval 
+            # untransformed_ninety_eight_point_five = np.percentile(sim_playoff_wins[f"{sim_playoff_wins.axes[1][i]}"], 98.5) # 97% credible interval 
+            untransformed_ninety_eight_point_five = np.percentile(sim_playoff_wins[f"{sim_playoff_wins.axes[1][i]}"], 99.5) # 99% credible interval 
 
-        #     sim_ninety_eight_point_five_list_.append(np.exp(untransformed_ninety_eight_point_five * np.log(17)) - 1)
+            sim_ninety_eight_point_five_list_.append(np.exp(untransformed_ninety_eight_point_five * np.log(17)) - 1)
 
 
-        # sim_mean["name"] = sim_name_list
+        sim_mean["name"] = sim_name_list
 
-        # sim_mean["mean"] = sim_mean_list_
+        sim_mean["mean"] = sim_mean_list_
 
-        # print(sim_mean.sort_values(by='mean', ascending=False))
+        print(sim_mean.sort_values(by='mean', ascending=False))
 
-        # sim_CI = pandas.DataFrame()
+        sim_CI = pandas.DataFrame()
 
-        # sim_CI['name'] = sim_name_list
+        sim_CI['name'] = sim_name_list
 
-        # # sim_CI['lower_bound_97_credible_interval'] = sim_one_point_five_list_
-        # # sim_CI['upper_bound_97_credible_interval'] = sim_ninety_eight_point_five_list_
+        # sim_CI['lower_bound_97_credible_interval'] = sim_one_point_five_list_
+        # sim_CI['upper_bound_97_credible_interval'] = sim_ninety_eight_point_five_list_
 
-        # sim_CI['lower_bound_99_credible_interval'] = sim_one_point_five_list_
-        # sim_CI['upper_bound_99_credible_interval'] = sim_ninety_eight_point_five_list_
+        sim_CI['lower_bound_99_credible_interval'] = sim_one_point_five_list_
+        sim_CI['upper_bound_99_credible_interval'] = sim_ninety_eight_point_five_list_
 
-        # # print(sim_CI.sort_values(by= "upper_bound_97_credible_interval", ascending= False))
-        # print(sim_CI.sort_values(by= "upper_bound_99_credible_interval", ascending= False))
+        # print(sim_CI.sort_values(by= "upper_bound_97_credible_interval", ascending= False))
+        print(sim_CI.sort_values(by= "upper_bound_99_credible_interval", ascending= False))
 
-        # ret_df = pandas.Series(data=sim_mean_list_, index=sim_name_list)
-        # json_file = ret_df.sort_values(ascending=False).to_json()
+        ret_df = pandas.Series(data=sim_mean_list_, index=sim_name_list)
+        json_file = ret_df.sort_values(ascending=False).to_json()
 
-        # return render_template('bayes_chart.html', json_file = json_file, name = "Bayesian Regression")
+        return render_template('tpot_chart.html', json_file = json_file, name = "Bayesian Linear Regression")
 
-        return render_template("bayes_plot.html")
+        # return render_template("bayes_plot.html") # 99% credible intervals ggplot 
