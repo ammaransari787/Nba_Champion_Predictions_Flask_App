@@ -5,7 +5,7 @@ Link to live app: https://nba-champion-2023-predicted-probabilities.fly.dev/
 
 This project initially began as a way to practice statistical techniques I was learning using real world data that I found relevant. I kept building on it as I learned new topics, coming back to it and adapting the project to incorporate the new techniques, programming languages, or statistical paradigms I wanted to explore more fully. 
 
-I have used this project as a way to develop my statistics skills, working through techniques from the books, Discovering Statistics Using R by Andy Field, an Introduction to Statistical Learning with Applications in R by James, Witten, Hastie, and Tibshirani, and Statistical Rethinking: A Bayesian Course With Applications in R and STAN by Richard McElreath. 
+I have used this project to practice and develop my statistics skills, working through techniques from the books Discovering Statistics Using R by Andy Field, an Introduction to Statistical Learning with Applications in R by James, Witten, Hastie, and Tibshirani, and Statistical Rethinking: A Bayesian Course With Applications in R and STAN by Richard McElreath. 
 
 Additionally, when I wanted to practice performing these techniques I had been learning in R in Python instead, I rewrote all R code in Python, as a means to teach myself Python and pandas. 
 
