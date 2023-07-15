@@ -5,5 +5,5 @@ pandas
 numpy 
 statsmodels
 gunicorn
-scikit-learn
+scikit-learn==1.2.1
 tpot

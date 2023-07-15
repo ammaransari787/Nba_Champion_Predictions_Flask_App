@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" rel="stylesheet">
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.css">
+
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+    <nav class="bg-light border navbar navbar-expand-md navbar-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">2023 NBA Champion Predicted Probabilities</a>
+            <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-bs-target="#navbar" data-bs-toggle="collapse" type="button">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbar">
+                <ul class="navbar-nav me-auto mt-2">
+                    <li class="nav-item"><a class="nav-link" href="/data">Data (Standardized)</a></li>
+                </ul>
+                <ul class="navbar-nav me-auto mt-2">
+                    <li class="nav-item"><a class="nav-link" href="/logistic">Logistic</a></li>
+                </ul>
+                <ul class="navbar-nav ms-auto mt-2">
+                    <li class="nav-item"><a class="nav-link" href="/lasso">LASSO</a></li>
+                </ul>
+                <ul class="navbar-nav ms-auto mt-2">
+                    <li class="nav-item"><a class="nav-link" href="/stability_selection_to_logistic">Stability Selection to Logistic</a></li>
+                </ul>
+                <ul class="navbar-nav ms-auto mt-2">
+                    <li class="nav-item"><a class="nav-link" href="/stability_selection_to_lasso">Stability Selection to LASSO</a></li>
+                </ul>
+                <ul class="navbar-nav ms-auto mt-2">
+                    <li class="nav-item"><a class="nav-link" href="/k_nearest_neighbors">K Nearest Neighbors</a></li>
+                </ul>
+                <ul class="navbar-nav ms-auto mt-2">
+                    <li class="nav-item"><a class="nav-link" href="/random_forest">Random Forest</a></li>
+                </ul>
+                <ul class="navbar-nav ms-auto mt-2">
+                    <li class="nav-item"><a class="nav-link" href="/tpot">TPOT</a></li>
+                </ul>
+                <ul class="navbar-nav ms-auto mt-2">
+                    <li class="nav-item"><a class="nav-link" href="/log_transformed_outcome_lasso_regression">LTO LASSO</a></li>
+                </ul>
+                <ul class="navbar-nav ms-auto mt-2">
+                    <li class="nav-item"><a class="nav-link" href="/bayesian_regression">Bayesian Regression</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <table class ="table table-striped" id="data">
+        <thead>
+            <tr>
+                <th>Team Name</th>
+                <th>PTS</th>
+                <th>FGM</th>
+                <th>FGA</th>
+                <th>FG_PCT</th>
+                <th>FG3M</th>
+                <th>FG3A</th>
+                <th>FG3_PCT</th>
+                <th>FTM</th>
+                <th>FTA</th>
+                <th>FT_PCT</th>
+                <th>OREB</th>
+                <th>DREB</th>
+                <th>REB</th>
+                <th>AST</th>
+                <th>STL</th>
+                <th>BLK</th>
+                <th>TOV</th>
+                <th>PF</th>
+                <th>PLUS_MINUS</th>
+                <th>NUM_ALL_DEFENSIVE_PLAYERS</th>
+                <th>NUM_ALL_STAR_PLAYERS</th>
+                <th>NUM_DPOY_PLAYERS</th>
+                <th>NUM_MVP_PLAYERS</th>
+                <th>W_PCT</th>
+                <th>E_OFF_RATING</th>
+                <th>E_DEF_RATING</th>
+                <th>E_NET_RATING</th>
+                <th>E_PACE</th>
+                <th>E_AST_RATIO</th>
+                <th>E_OREB_PCT</th>
+                <th>E_DREB_PCT</th>
+                <th>E_REB_PCT</th>
+                <th>E_TM_TOV_PCT</th>
+                <th>eFG_PCT</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for team in json_file %}
+
+                <tr>
+                    <td>{{ team.TEAM_NAME }}</td>
+                    <td> {{ team.PTS }} </td>
+                    <td> {{ team.FGM }} </td>
+                    <td> {{ team.FGA }} </td>
+                    <td> {{ team.FG_PCT }} </td>
+                    <td> {{ team.FG3M }} </td>
+                    <td> {{ team.FG3A }} </td>
+                    <td> {{ team.FG3_PCT }} </td>
+                    <td> {{ team.FTM }} </td>
+                    <td> {{ team.FTA }} </td>
+                    <td> {{ team.FT_PCT }} </td>
+                    <td> {{ team.OREB }} </td>
+                    <td> {{ team.DREB }} </td>
+                    <td> {{ team.REB }} </td>
+                    <td> {{ team.AST }} </td>
+                    <td> {{ team.STL }} </td>
+                    <td> {{ team.BLK }} </td>
+                    <td> {{ team.TOV }} </td>
+                    <td> {{ team.PF }} </td>
+                    <td> {{ team.PLUS_MINUS }} </td>
+                    <td> {{ team.NUM_ALL_DEFENSIVE_PLAYERS }} </td>
+                    <td> {{ team.NUM_ALL_STAR_PLAYERS }} </td>
+                    <td> {{ team.NUM_DPOY_PLAYERS }} </td>
+                    <td> {{ team.NUM_MVP_PLAYERS }} </td>
+                    <td> {{ team.W_PCT }} </td>
+                    <td> {{ team.E_OFF_RATING }} </td>
+                    <td> {{ team.E_DEF_RATING }} </td>
+                    <td> {{ team.E_NET_RATING }} </td>
+                    <td> {{ team.E_PACE }} </td>
+                    <td> {{ team.E_AST_RATIO }} </td>
+                    <td> {{ team.E_OREB_PCT }} </td>
+                    <td> {{ team.E_DREB_PCT }} </td>
+                    <td> {{ team.E_REB_PCT }} </td>
+                    <td> {{ team.E_TM_TOV_PCT }} </td>
+                    <td> {{ team.eFG_PCT }} </td>
+                </tr>
+
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.js"></script>
+
+    <script>
+        $(document).ready(function () {
+          $('#data').DataTable(
+            {
+                paging: false,
+                searching: false,
+                scrollbars: true
+            }
+          );
+        });
+      </script>
+    
+</body>
+</html>

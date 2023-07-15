@@ -1,0 +1,110 @@
+{% extends 'new_layout.html' %}
+
+{% block title %}
+    {{ name }}
+{% endblock %}
+
+{% block main %}
+<!-- <div class = 'container'> -->
+    <!-- <center> -->
+        <table class ="table table-striped" id="data">
+            <thead>
+                <tr>
+                    <th>Team Name</th>
+                    <th>PTS</th>
+                    <th>FGM</th>
+                    <th>FGA</th>
+                    <th>FG_PCT</th>
+                    <th>FG3M</th>
+                    <th>FG3A</th>
+                    <th>FG3_PCT</th>
+                    <th>FTM</th>
+                    <th>FTA</th>
+                    <th>FT_PCT</th>
+                    <th>OREB</th>
+                    <th>DREB</th>
+                    <th>REB</th>
+                    <th>AST</th>
+                    <th>STL</th>
+                    <th>BLK</th>
+                    <th>TOV</th>
+                    <th>PF</th>
+                    <th>PLUS_MINUS</th>
+                    <th>NUM_ALL_DEFENSIVE_PLAYERS</th>
+                    <th>NUM_ALL_STAR_PLAYERS</th>
+                    <th>NUM_DPOY_PLAYERS</th>
+                    <th>NUM_MVP_PLAYERS</th>
+                    <th>W_PCT</th>
+                    <th>E_OFF_RATING</th>
+                    <th>E_DEF_RATING</th>
+                    <th>E_NET_RATING</th>
+                    <th>E_PACE</th>
+                    <th>E_AST_RATIO</th>
+                    <th>E_OREB_PCT</th>
+                    <th>E_DREB_PCT</th>
+                    <th>E_REB_PCT</th>
+                    <th>E_TM_TOV_PCT</th>
+                    <th>eFG_PCT</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for team in json_file %}
+
+                    <tr>
+                        <td>{{ team.TEAM_NAME }}</td>
+                        <td> {{ team.PTS }} </td>
+                        <td> {{ team.FGM }} </td>
+                        <td> {{ team.FGA }} </td>
+                        <td> {{ team.FG_PCT }} </td>
+                        <td> {{ team.FG3M }} </td>
+                        <td> {{ team.FG3A }} </td>
+                        <td> {{ team.FG3_PCT }} </td>
+                        <td> {{ team.FTM }} </td>
+                        <td> {{ team.FTA }} </td>
+                        <td> {{ team.FT_PCT }} </td>
+                        <td> {{ team.OREB }} </td>
+                        <td> {{ team.DREB }} </td>
+                        <td> {{ team.REB }} </td>
+                        <td> {{ team.AST }} </td>
+                        <td> {{ team.STL }} </td>
+                        <td> {{ team.BLK }} </td>
+                        <td> {{ team.TOV }} </td>
+                        <td> {{ team.PF }} </td>
+                        <td> {{ team.PLUS_MINUS }} </td>
+                        <td> {{ team.NUM_ALL_DEFENSIVE_PLAYERS }} </td>
+                        <td> {{ team.NUM_ALL_STAR_PLAYERS }} </td>
+                        <td> {{ team.NUM_DPOY_PLAYERS }} </td>
+                        <td> {{ team.NUM_MVP_PLAYERS }} </td>
+                        <td> {{ team.W_PCT }} </td>
+                        <td> {{ team.E_OFF_RATING }} </td>
+                        <td> {{ team.E_DEF_RATING }} </td>
+                        <td> {{ team.E_NET_RATING }} </td>
+                        <td> {{ team.E_PACE }} </td>
+                        <td> {{ team.E_AST_RATIO }} </td>
+                        <td> {{ team.E_OREB_PCT }} </td>
+                        <td> {{ team.E_DREB_PCT }} </td>
+                        <td> {{ team.E_REB_PCT }} </td>
+                        <td> {{ team.E_TM_TOV_PCT }} </td>
+                        <td> {{ team.eFG_PCT }} </td>
+                    </tr>
+
+                {% endfor %}
+            </tbody>
+        </table>
+    <!-- </center> -->
+ <!-- </div> -->
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    $(document).ready(function () {
+      $('#data').DataTable(
+        {
+            paging: false,
+            searching: false,
+            scrollbars: true
+        }
+      );
+    });
+  </script>
+{% endblock %}
